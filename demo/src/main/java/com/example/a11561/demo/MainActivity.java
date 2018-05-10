@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 bmcopy.compress(Bitmap.CompressFormat.PNG,100,stream);
-                ////发送Sd卡的就绪广播,要不然在手机图库中不存在
+                ////发送Sd卡的就绪广播,要不然在手机图库中不存在的
                 Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED);
                 intent.setData(Uri.fromFile(Environment.getExternalStorageDirectory()));
                 Toast.makeText(MainActivity.this,"已经保存图片",Toast.LENGTH_SHORT).show();
