@@ -1,12 +1,14 @@
 package com.example.a11561.demo;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,12 +17,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
@@ -110,16 +115,23 @@ public class MainActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                File file = new File(Environment.getExternalStorageDirectory(),
-                        System.currentTimeMillis() + ".jpg");
-                OutputStream stream;
+                //根据当前时间当做文件夹
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+                Date date = new Date(System.currentTimeMillis());//获取当前时间
+                //
+                String str= format.format(date) + "paint.png";
+                File file = new File("sdcard/" + str);
+                FileOutputStream stream=null;
                 try {
-                    stream = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 200, stream);
-                    stream.close();
+                    stream=new FileOutputStream(file);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                bmcopy.compress(Bitmap.CompressFormat.PNG,100,stream);
+                ////发送Sd卡的就绪广播,要不然在手机图库中不存在
+                Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED);
+                intent.setData(Uri.fromFile(Environment.getExternalStorageDirectory()));
+                Toast.makeText(MainActivity.this,"已经保存图片",Toast.LENGTH_SHORT).show();
             }
         });
 
